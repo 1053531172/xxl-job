@@ -10,6 +10,7 @@ $(function() {
 			type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
+	        	obj.jobName = $('#jobName').val();
 	        	obj.jobGroup = $('#jobGroup').val();
                 obj.triggerStatus = $('#triggerStatus').val();
                 obj.jobDesc = $('#jobDesc').val();
@@ -31,6 +32,11 @@ $(function() {
 						"width":'7%'
 					},
 	                {
+	                	"data": 'jobName',
+						"visible" : true,
+						"width":'15%'
+					},
+	                {
 	                	"data": 'jobGroup',
 	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
@@ -46,11 +52,11 @@ $(function() {
 	                {
 	                	"data": 'jobDesc',
 						"visible" : true,
-						"width":'25%'
+						"width":'20%'
 					},
 					{
 						"data": 'glueType',
-						"width":'25%',
+						"width":'15%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = findGlueTypeTitle(row.glueType);
@@ -376,6 +382,10 @@ $(function() {
 				required : true,
 				maxlength: 50
 			},
+			jobName : {
+				required : true,
+				maxlength: 50
+			},
             jobCron : {
             	required : true
             },
@@ -392,6 +402,9 @@ $(function() {
         messages : {
             jobDesc : {
             	required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
+            },
+            jobName : {
+            	required : I18n.system_please_input + I18n.jobinfo_field_jobName
             },
             jobCron : {
             	required : I18n.system_please_input + "Cron"
@@ -509,6 +522,7 @@ $(function() {
 		// base data
 		$("#updateModal .form input[name='id']").val( row.id );
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
+		$("#updateModal .form input[name='jobName']").val( row.jobName );
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
 		$("#updateModal .form input[name='author']").val( row.author );
@@ -541,6 +555,10 @@ $(function() {
 				required : true,
 				maxlength: 50
 			},
+			jobName : {
+				required : true,
+				maxlength: 50
+			},
 			jobCron : {
 				required : true
 			},
@@ -557,6 +575,9 @@ $(function() {
 		messages : {
 			jobDesc : {
                 required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
+			},
+			jobName : {
+                required : I18n.system_please_input + I18n.jobinfo_field_jobName
 			},
 			jobCron : {
 				required : I18n.system_please_input + "Cron"

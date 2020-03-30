@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -43,6 +44,7 @@ public class JobGroupController {
 
 	@RequestMapping("/save")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){
 
 		// valid
@@ -73,8 +75,33 @@ public class JobGroupController {
 
 	@RequestMapping("/update")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
 		// valid
+		ReturnT<String> result = validateXxlJobGroup(xxlJobGroup);
+		if (result.getCode() != ReturnT.SUCCESS_CODE) {
+			return result;
+		}
+
+		int ret = xxlJobGroupDao.update(xxlJobGroup);
+		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+	}
+	
+	@RequestMapping("/updateByAppName")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> updateByAppName(XxlJobGroup xxlJobGroup){
+		// valid
+		ReturnT<String> result = validateXxlJobGroup(xxlJobGroup);
+		if (result.getCode() != ReturnT.SUCCESS_CODE) {
+			return result;
+		}
+
+		int ret = xxlJobGroupDao.updateByAppName(xxlJobGroup);
+		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+	}
+
+	private ReturnT<String> validateXxlJobGroup(XxlJobGroup xxlJobGroup) {
 		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
@@ -109,11 +136,10 @@ public class JobGroupController {
 				}
 			}
 		}
-
-		int ret = xxlJobGroupDao.update(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		
+		return ReturnT.SUCCESS;
 	}
-
+	
 	private List<String> findRegistryByAppName(String appNameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
 		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
@@ -138,6 +164,7 @@ public class JobGroupController {
 
 	@RequestMapping("/remove")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> remove(int id){
 
 		// valid
@@ -154,12 +181,48 @@ public class JobGroupController {
 		int ret = xxlJobGroupDao.remove(id);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
+	
+	@RequestMapping("/removeByAppName")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> removeByAppName(String appName){
+
+		// valid
+		int count = xxlJobInfoDao.pageListCountByAppName(0, 10, appName, -1,  null, null, null);
+		if (count > 0) {
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_0") );
+		}
+
+		List<XxlJobGroup> allList = xxlJobGroupDao.findAll();
+		if (allList.size() == 1) {
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_1") );
+		}
+
+		int ret = xxlJobGroupDao.removeByAppName(appName);
+		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+	}
 
 	@RequestMapping("/loadById")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<XxlJobGroup> loadById(int id){
 		XxlJobGroup jobGroup = xxlJobGroupDao.load(id);
 		return jobGroup!=null?new ReturnT<XxlJobGroup>(jobGroup):new ReturnT<XxlJobGroup>(ReturnT.FAIL_CODE, null);
 	}
+	
+	@RequestMapping("/loadByAppName")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<XxlJobGroup> loadByAppName(String appName){
+		XxlJobGroup jobGroup = xxlJobGroupDao.loadByAppName(appName);
+		return jobGroup!=null?new ReturnT<XxlJobGroup>(jobGroup):new ReturnT<XxlJobGroup>(ReturnT.FAIL_CODE, null);
+	}
 
+	@RequestMapping("/findAll")
+	@ResponseBody
+	public ReturnT<List<XxlJobGroup>> findAll() {
+		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
+		return list != null ? new ReturnT<List<XxlJobGroup>>(list)
+				: new ReturnT<List<XxlJobGroup>>(ReturnT.FAIL_CODE, null);
+	}
 }

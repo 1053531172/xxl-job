@@ -11,6 +11,7 @@ public class XxlJobInfo {
 	
 	private int id;				// 主键ID
 	
+	private String jobName;     // 任务名称
 	private int jobGroup;		// 执行器主键ID
 	private String jobCron;		// 任务执行CRON表达式
 	private String jobDesc;
@@ -46,6 +47,14 @@ public class XxlJobInfo {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
 	}
 
 	public int getJobGroup() {

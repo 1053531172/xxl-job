@@ -48,16 +48,37 @@
 			`address_list` = #{addressList}
 		WHERE id = #{id}
 	</update>
+	
+	<update id="updateByAppName" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+		UPDATE xxl_job_group
+		SET `app_name` = #{appName},
+			`title` = #{title},
+			`order` = #{order},
+			`address_type` = #{addressType},
+			`address_list` = #{addressList}
+		WHERE app_name = #{appName}
+	</update>
 
 	<delete id="remove" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_group
 		WHERE id = #{id}
+	</delete>
+	
+	<delete id="removeByAppName" parameterType="java.lang.String" >
+		DELETE FROM xxl_job_group
+		WHERE app_name = #{appName}
 	</delete>
 
 	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
 		WHERE t.id = #{id}
+	</select>
+	
+	<select id="loadByAppName" parameterType="java.lang.String" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_group AS t
+		WHERE t.app_name = #{appName}
 	</select>
 
 </mapper>

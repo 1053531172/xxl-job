@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -156,6 +157,7 @@ public class JobLogController {
 
 	@RequestMapping("/logKill")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> logKill(int id){
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);

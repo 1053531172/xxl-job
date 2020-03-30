@@ -69,6 +69,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
+		if (jobInfo.getJobName()==null || jobInfo.getJobName().trim().length()==0) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobName")) );
+		}
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
@@ -130,7 +133,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	private boolean isNumeric(String str){
 		try {
-			int result = Integer.valueOf(str);
+			Integer.valueOf(str);
 			return true;
 		} catch (NumberFormatException e) {
 			return false;
@@ -143,6 +146,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// valid
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid") );
+		}
+		if (jobInfo.getJobName()==null || jobInfo.getJobName().trim().length()==0) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobName")) );
 		}
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
@@ -213,6 +219,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
 		exists_jobInfo.setJobCron(jobInfo.getJobCron());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
+		exists_jobInfo.setJobName(jobInfo.getJobName());
 		exists_jobInfo.setAuthor(jobInfo.getAuthor());
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
@@ -231,6 +238,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return ReturnT.SUCCESS;
 	}
 
+	@Override
+	public ReturnT<XxlJobInfo> loadByJobName(String jobName) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadByJobName(jobName);
+		return xxlJobInfo != null ? new ReturnT<XxlJobInfo>(xxlJobInfo)
+				: new ReturnT<XxlJobInfo>(ReturnT.FAIL_CODE, null);
+	}
+	
 	@Override
 	public ReturnT<String> remove(int id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);

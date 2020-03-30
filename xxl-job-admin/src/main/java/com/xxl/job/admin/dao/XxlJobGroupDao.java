@@ -19,8 +19,14 @@ public interface XxlJobGroupDao {
     public int save(XxlJobGroup xxlJobGroup);
 
     public int update(XxlJobGroup xxlJobGroup);
+    
+    public int updateByAppName(XxlJobGroup xxlJobGroup);
 
     public int remove(@Param("id") int id);
+    
+    public int removeByAppName(String appName);
 
     public XxlJobGroup load(@Param("id") int id);
+    
+    public XxlJobGroup loadByAppName(String appName);
 }

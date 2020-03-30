@@ -21,6 +21,7 @@ public interface XxlJobInfoDao {
 									 @Param("jobDesc") String jobDesc,
 									 @Param("executorHandler") String executorHandler,
 									 @Param("author") String author);
+	
 	public int pageListCount(@Param("offset") int offset,
 							 @Param("pagesize") int pagesize,
 							 @Param("jobGroup") int jobGroup,
@@ -33,6 +34,8 @@ public interface XxlJobInfoDao {
 
 	public XxlJobInfo loadById(@Param("id") int id);
 	
+	public XxlJobInfo loadByJobName(@Param("jobName") String jobName);
+	
 	public int update(XxlJobInfo xxlJobInfo);
 	
 	public int delete(@Param("id") long id);
@@ -44,6 +47,12 @@ public interface XxlJobInfoDao {
 	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
 
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
-
-
+	
+	public int pageListCountByAppName(@Param("offset") int offset,
+			 @Param("pagesize") int pagesize,
+			 @Param("appName") String appName,
+			 @Param("triggerStatus") int triggerStatus,
+			 @Param("jobDesc") String jobDesc,
+			 @Param("executorHandler") String executorHandler,
+			 @Param("author") String author);
 }

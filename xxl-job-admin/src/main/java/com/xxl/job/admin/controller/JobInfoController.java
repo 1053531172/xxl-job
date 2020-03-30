@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -28,7 +29,7 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
- * index controller
+ * 任务管理
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
@@ -90,6 +91,18 @@ public class JobInfoController {
 		}
 	}
 	
+	/**
+	 * 任务列表
+	 * @param start 
+	 * @param length
+	 * @param jobGroup 执行器
+	 * @param triggerStatus 任务状态，-1全部，0停止，1启动
+	 * @param jobDesc 任务描述
+	 * @param executorHandler
+	 * @param author 负责人
+	 * @return
+	 * @return Map<String,Object>
+	 */
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
@@ -99,38 +112,57 @@ public class JobInfoController {
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
 	
+	/**
+	 * 添加任务
+	 * @param jobInfo
+	 * @return
+	 * @return ReturnT<String>
+	 */
 	@RequestMapping("/add")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
 	}
 	
 	@RequestMapping("/update")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> update(XxlJobInfo jobInfo) {
 		return xxlJobService.update(jobInfo);
 	}
 	
+	@RequestMapping("/loadByJobName")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<XxlJobInfo> loadByJobName(String jobName) {
+		return xxlJobService.loadByJobName(jobName);
+	}
+	
 	@RequestMapping("/remove")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> remove(int id) {
 		return xxlJobService.remove(id);
 	}
 	
 	@RequestMapping("/stop")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> pause(int id) {
 		return xxlJobService.stop(id);
 	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	public ReturnT<String> start(int id) {
 		return xxlJobService.start(id);
 	}
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
+	@PermissionLimit(limit = false)
 	//@PermissionLimit(limit = false)
 	public ReturnT<String> triggerJob(int id, String executorParam) {
 		// force cover job param
@@ -162,5 +194,4 @@ public class JobInfoController {
 		}
 		return new ReturnT<List<String>>(result);
 	}
-	
 }

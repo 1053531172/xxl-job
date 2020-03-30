@@ -42,7 +42,14 @@ public interface XxlJobService {
 	 * @return
 	 */
 	public ReturnT<String> update(XxlJobInfo jobInfo);
-
+	
+	/**
+	 * load job
+	 * @param jobInfo
+	 * @return
+	 */
+	public ReturnT<XxlJobInfo> loadByJobName(String jobName);
+	
 	/**
 	 * remove job
 	 * 	 *
@@ -82,5 +89,7 @@ public interface XxlJobService {
 	 * @return
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
+
+	
 
 }
